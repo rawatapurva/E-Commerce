@@ -7,18 +7,21 @@ export default function Login() {
   const { login } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false); // 👈 new state
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // 👈 start loading
     try {
       await login(email, password);
-      toast.success("Login successful 🎉"); // ✅ success toast
+      toast.success("Login successful 🎉"); 
       navigate("/"); 
     } catch (err) {
-      // if backend sends error message, use that, otherwise fallback
       const errorMessage = err.response?.data?.message || "Invalid credentials ❌";
       toast.error(errorMessage);
+    } finally {
+      setLoading(false); // 👈 stop loading
     }
   };
 
@@ -43,9 +46,12 @@ export default function Login() {
           />
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+            disabled={loading} // 👈 disable while loading
+            className={`w-full py-2 rounded text-white ${
+              loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+            }`}
           >
-            Login
+            {loading ? "Logging in..." : "Login"} {/* 👈 feedback text */}
           </button>
         </form>
 

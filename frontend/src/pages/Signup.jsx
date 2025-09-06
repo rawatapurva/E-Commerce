@@ -7,12 +7,20 @@ export default function Signup() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false); // 👈 new state
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await signup(name, email, password);
-    navigate('/'); // ✅ redirect directly to Home after signup
+    setLoading(true); // 👈 start loading
+    try {
+      await signup(name, email, password);
+      navigate('/'); 
+    } catch (err) {
+      console.error("Signup failed", err);
+    } finally {
+      setLoading(false); // 👈 stop loading
+    }
   };
 
   return (
@@ -41,12 +49,17 @@ export default function Signup() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button className="w-full bg-green-500 text-white py-2 rounded">
-            Signup
+          <button
+            type="submit"
+            disabled={loading} // 👈 disable during loading
+            className={`w-full py-2 rounded text-white ${
+              loading ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-600"
+            }`}
+          >
+            {loading ? "Signing up..." : "Signup"} {/* 👈 feedback */}
           </button>
         </form>
 
-        {/* 👇 Add this for existing users */}
         <p className="text-sm text-gray-600 mt-4 text-center">
           Already have an account?{" "}
           <Link to="/login" className="text-blue-600 hover:underline">
