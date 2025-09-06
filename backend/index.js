@@ -9,7 +9,7 @@ const cartRoutes = require('./routes/cart');
 const app = express();
 
 // ✅ Fix: Allow both 5173 and 5174 during development
-const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174', 'https://e-commerce-sooty-rho.vercel.app'];
 
 app.use(cors({
   origin: function (origin, callback) {
